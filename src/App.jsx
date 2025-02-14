@@ -1,10 +1,10 @@
 import { useState } from "react";
 import "./App.css";
-import contact from "./Contact/Contact";
-import ContactList from "./ContactList/ContactList";
-import ContactForm from "./ContactForm/ContactForm";
+import contact from "./components/Contact/Contact";
+import ContactList from "./components/ContactList/ContactList";
+import ContactForm from "./components/ContactForm/ContactForm";
 
-import SearchBox from "./SearchBox/SearchBox";
+import SearchBox from "./components/SearchBox/SearchBox";
 
 function App() {
   const [contacts, setContacts] = useState(contact);
