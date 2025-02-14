@@ -6,6 +6,7 @@ import styles from "./ContactForm.module.css";
 
 const validationSchema = Yup.object({
   name: Yup.string()
+    .matches(/^[A-Za-z\s]+$/, "Only letters are allowed")
     .min(3, "Too short!")
     .max(50, "Too long!")
     .required("Required"),
@@ -40,19 +41,39 @@ const ContactForm = ({ onAddContact }) => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      <Form className={styles.form}>
-        <label htmlFor="name">Name</label>
-        <Field type="text" id="name" name="name" className={styles.input} />
-        <ErrorMessage name="name" component="div" className={styles.error} />
+      {({ touched, errors }) => (
+        <Form className={styles.form}>
+          <label htmlFor="name">Name</label>
+          <Field
+            type="text"
+            id="name"
+            name="name"
+            className={`${styles.input} ${
+              touched.name && errors.name ? styles.inputError : ""
+            }`}
+          />
+          <ErrorMessage name="name" component="div" className={styles.error} />
 
-        <label htmlFor="number">Phone number</label>
-        <Field type="text" id="number" name="number" className={styles.input} />
-        <ErrorMessage name="number" component="div" className={styles.error} />
+          <label htmlFor="number">Phone number</label>
+          <Field
+            type="text"
+            id="number"
+            name="number"
+            className={`${styles.input} ${
+              touched.number && errors.number ? styles.inputError : ""
+            }`}
+          />
+          <ErrorMessage
+            name="number"
+            component="div"
+            className={styles.error}
+          />
 
-        <button type="submit" className={styles.submitButton}>
-          Add to contacts
-        </button>
-      </Form>
+          <button type="submit" className={styles.submitButton}>
+            Add to contacts
+          </button>
+        </Form>
+      )}
     </Formik>
   );
 };
