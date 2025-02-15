@@ -1,8 +1,31 @@
-const contacts = [
-  { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-  { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-  { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-  { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-];
+import PropTypes from "prop-types";
+import styles from "./Contact.module.css";
+import { FaPhoneAlt, FaUser } from "react-icons/fa";
 
-export default contacts;
+const Contact = ({ id, name, number, onDelete }) => {
+  return (
+    <li className={styles.contactItem}>
+      <div className={styles.contactData}>
+        <span className={styles.contactName}>
+          <FaUser className={styles.contactIcon} />
+          {name}
+        </span>
+        <span className={styles.contactNumber}>
+          <FaPhoneAlt className={styles.phoneIcon} /> {number}
+        </span>
+      </div>
+      <button className={styles.deleteButton} onClick={() => onDelete(id)}>
+        <span className={styles.deleteText}>Delete</span>
+      </button>
+    </li>
+  );
+};
+
+Contact.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  number: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+};
+
+export default Contact;

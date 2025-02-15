@@ -1,14 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
-import contact from "./components/Contact/Contact";
 import ContactList from "./components/ContactList/ContactList";
 import ContactForm from "./components/ContactForm/ContactForm";
-
 import SearchBox from "./components/SearchBox/SearchBox";
 
+const LOCAL_STORAGE_KEY = "contacts";
+
+const initialContacts = [
+  { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
+  { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
+  { id: "id-3", name: "Eden Clements", number: "645-17-79" },
+  { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
+];
+
 function App() {
-  const [contacts, setContacts] = useState(contact);
   const [filter, setFilter] = useState("");
+  const [contacts, setContacts] = useState(() => {
+    const savedContacts = localStorage.getItem(LOCAL_STORAGE_KEY);
+
+    if (!savedContacts) {
+      return initialContacts;
+    }
+
+    try {
+      const parsedContacts = JSON.parse(savedContacts);
+      if (!Array.isArray(parsedContacts) || parsedContacts.length === 0) {
+        return initialContacts;
+      }
+
+      return parsedContacts;
+    } catch (error) {
+      console.error("Error parsing contacts from localStorage:", error);
+      return initialContacts;
+    }
+  });
+
+  useEffect(() => {
+    if (contacts.length > 0) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(contacts));
+    }
+  }, [contacts]);
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
@@ -18,14 +49,33 @@ function App() {
     contact.name.toLowerCase().includes(filter.toLowerCase())
   );
 
-  const addContact = (contact) => {
-    setContacts((prevContacts) => [...prevContacts, contact]);
+  const addContact = (newContact) => {
+    if (
+      contacts.some(
+        (contact) =>
+          contact.name.toLowerCase() === newContact.name.toLowerCase()
+      )
+    ) {
+      alert(`${newContact.name} is already in contacts!`);
+      return;
+    }
+
+    setContacts((prevContacts) => {
+      const updatedContacts = [...prevContacts, newContact];
+      return updatedContacts;
+    });
   };
 
   const handleDelete = (id) => {
-    setContacts((prevContacts) =>
-      prevContacts.filter((contact) => contact.id !== id)
-    );
+    setContacts((prevContacts) => {
+      const updatedContacts = prevContacts.filter(
+        (contact) => contact.id !== id
+      );
+      return updatedContacts;
+    });
+
+    const updatedContacts = contacts.filter((contact) => contact.id !== id);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedContacts));
   };
 
   return (

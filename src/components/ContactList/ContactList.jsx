@@ -1,25 +1,19 @@
 import PropTypes from "prop-types";
 import styles from "./Contacts.module.css";
-import { FaPhoneAlt, FaUser } from "react-icons/fa";
+import Contact from "../Contact/Contact";
 
 const ContactList = ({ contacts, onDelete }) => {
+  console.log("Contacts array:", contacts);
   return (
     <ul className={styles.contactList}>
       {contacts.map(({ id, name, number }) => (
-        <li key={id} className={styles.contactItem}>
-          <div className={styles.contactData}>
-            <span className={styles.contactName}>
-              <FaUser className={styles.contactIcon} />
-              {name}
-            </span>
-            <span className={styles.contactNumber}>
-              <FaPhoneAlt className={styles.phoneIcon} /> {number}
-            </span>
-          </div>
-          <button className={styles.deleteButton} onClick={() => onDelete(id)}>
-            <span className={styles.deleteText}>Delete</span>
-          </button>
-        </li>
+        <Contact
+          key={id}
+          id={id}
+          name={name}
+          number={number}
+          onDelete={onDelete}
+        />
       ))}
     </ul>
   );
